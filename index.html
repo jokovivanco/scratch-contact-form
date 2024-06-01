@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Contact form</title>
+
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <style>
+      .attribution {
+        font-size: 11px;
+        text-align: center;
+      }
+      .attribution a {
+        color: hsl(228, 45%, 44%);
+      }
+
+      @font-face {
+        font-family: 'Karla';
+        font-weight: 400 700;
+        src: url('assets/fonts/Karla-VariableFont_wght.ttf') format('truetype');
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --background: #e0f1e7;
+        --text: #1e1e1e;
+        --primary: #0c7d69;
+        --text-rgb: 30, 30, 30;
+        --secondary: #2a4244;
+      }
+
+      body {
+        display: flex;
+        min-height: 100vh;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Karla';
+        color: var(--text);
+        background-color: var(--background);
+        flex-direction: column;
+      }
+
+      label,
+      input,
+      .label,
+      textarea {
+        font-size: 0.875rem;
+      }
+
+      label:not([data-radio='true'])::after,
+      .label::after {
+        content: ' *';
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      input[type='radio'] {
+        transform: scale(0.875);
+        accent-color: var(--primary);
+      }
+
+      input[type='checkbox'] {
+        border: 1px solid transparent;
+        accent-color: var(--primary);
+      }
+
+      input[type='text']:focus,
+      input[type='email']:focus,
+      textarea:focus {
+        outline: none;
+        border: 1px solid var(--primary);
+      }
+
+      input[type='text']:hover,
+      input[type='email']:hover,
+      textarea:hover {
+        border: 1px solid var(--primary);
+      }
+
+      form > * {
+        margin-top: 16px;
+      }
+
+      .form {
+        background-color: white;
+        padding: 24px;
+        border-radius: 8px;
+      }
+      .row {
+        display: flex;
+        gap: 16px 8px;
+        flex-wrap: wrap;
+      }
+
+      .row.radio {
+        gap: 8px;
+      }
+
+      .row > * {
+        flex-grow: 1;
+      }
+
+      .form-control {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .radio-control {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        padding-left: 10px;
+      }
+
+      .radio-control:hover {
+        border: 1px solid var(--primary);
+      }
+
+      .radio-control:has(> input[type='radio']:checked) {
+        background-color: var(--background);
+        border: 1px solid var(--primary);
+      }
+
+      .radio-control * {
+        cursor: pointer;
+      }
+
+      .agreement {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        column-gap: 8px;
+      }
+
+      input,
+      textarea,
+      .radio-control {
+        border: 1px solid rgba(var(--text-rgb), 0.4);
+        border-radius: 4px;
+        padding: 6px;
+      }
+
+      button[type='button'] {
+        width: 100%;
+        border: none;
+        border-radius: 4px;
+        background-color: var(--primary);
+        color: white;
+        font-family: 'Karla';
+        padding: 8px 4px;
+        cursor: pointer;
+        font-size: 0.875rem;
+      }
+
+      .invalid {
+        border: 1px solid red;
+      }
+
+      .text-invalid {
+        color: red;
+        font-size: 0.875rem;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      .toast {
+        position: absolute;
+        padding: 16px 24px;
+        background-color: var(--secondary);
+        border-radius: 8px;
+        top: 0;
+        z-index: 1;
+        width: 300px;
+        color: white;
+        flex-direction: column;
+        gap: 5px;
+        margin-top: 20px;
+      }
+
+      .show {
+        display: block;
+      }
+
+      .showToast {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toast" class="hide toast">
+      <p style="font-weight: 700">Message Sent!</p>
+      <p>Thanks for completing the form. We'll be in touch soon!</p>
+    </div>
+    <div class="form">
+      <div class="form-main">
+        <h3>Contact Us</h3>
+        <form>
+          <!-- 1st row input -->
+          <div class="row">
+            <div class="form-control">
+              <label for="firstName">First Name</label>
+              <input type="text" name="firstName" id="firstName" required />
+              <p class="text-invalid hide"></p>
+            </div>
+            <div class="form-control">
+              <label for="lastName">Last Name</label>
+              <input type="text" name="lastName" id="lastName" required />
+              <p class="text-invalid hide"></p>
+            </div>
+          </div>
+
+          <!-- 2nd row input -->
+          <div class="form-control">
+            <label for="email">Email Address</label>
+            <input type="email" name="email" id="email" required />
+            <p class="text-invalid hide"></p>
+          </div>
+
+          <!-- 3rd row input -->
+          <div class="form-control">
+            <p for="queryType" class="label">Query Type</p>
+            <div class="row radio">
+              <div class="radio-control">
+                <input
+                  type="radio"
+                  name="queryType"
+                  id="generalEnquiry"
+                  required
+                />
+                <label for="generalEnquiry" data-radio="true"
+                  >General Enquiry</label
+                >
+              </div>
+              <div class="radio-control">
+                <input type="radio" name="queryType" id="supportRequest" />
+                <label for="supportRequest" data-radio="true"
+                  >Support Request</label
+                >
+              </div>
+            </div>
+            <p class="text-invalid hide"></p>
+          </div>
+
+          <!-- 4th row input -->
+          <div class="form-control">
+            <label for="message">Message</label>
+            <textarea name="message" id="message" rows="4" required></textarea>
+            <p class="text-invalid hide"></p>
+          </div>
+
+          <!-- 5th row input -->
+          <div>
+            <div class="agreement">
+              <input type="checkbox" name="agreement" id="agreement" required />
+              <label for="agreement"
+                >I consent to being contacted by the team</label
+              >
+            </div>
+            <p class="text-invalid hide" style="margin-top: 4px"></p>
+          </div>
+
+          <button type="button">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>.
+      Coded by <a href="#">Your Name Here</a>.
+    </div>
+
+    <script>
+      // turn off input default behaviour
+      const allInputElements = [
+        ...document.querySelectorAll('input'),
+        document.querySelector('textarea'),
+      ];
+
+      allInputElements.forEach((input) => {
+        input.addEventListener('invalid', (e) => {
+          e.preventDefault();
+        });
+      });
+
+      // handle radio
+      const radios = document.getElementsByClassName('radio-control');
+      Array.from(radios).forEach((radio) => {
+        const input = radio.querySelector('input');
+        radio.addEventListener('click', () => {
+          input.checked = true;
+        });
+      });
+
+      // handle form submit
+      const form = document.forms[0];
+      form.addEventListener('submit', handleSubmit);
+
+      function handleSubmit(e) {
+        e.preventDefault();
+
+        // get form input data
+        const formData = new FormData(form);
+        const data = [];
+        for (const [key, value] of formData) {
+          data.push({ key, value });
+        }
+
+        // action
+        console.log(data);
+
+        // reset form
+        form.reset();
+
+        // show notification
+        document.getElementById('toast').classList.remove('hide');
+        document.getElementById('toast').classList.add('showToast');
+
+        setTimeout(() => {
+          document.getElementById('toast').classList.remove('showToast');
+          document.getElementById('toast').classList.add('hide');
+        }, 3000);
+      }
+
+      // validate
+      const submitButton = document.querySelector('button[type="button"]');
+
+      function validate() {
+        allInputElements.forEach((input) => {
+          const p =
+            input.type === 'radio'
+              ? input.parentElement.parentElement.parentElement.querySelector(
+                  'p.text-invalid'
+                )
+              : input.type === 'checkbox'
+              ? input.parentElement.parentElement.querySelector(
+                  'p.text-invalid'
+                )
+              : input.parentElement.querySelector('p.text-invalid');
+
+          if (!input.checkValidity()) {
+            if (['text', 'textarea'].includes(input.type)) {
+              input.style.border = '1px solid red';
+              p.textContent = 'This field is required';
+            } else if (input.type === 'email') {
+              input.style.border = '1px solid red';
+              p.textContent = 'Please enter a valid email address';
+            } else if (input.type === 'checkbox') {
+              p.textContent =
+                'To submit this form, please consent to being contacted';
+            } else {
+              p.textContent = 'Please select a query type';
+            }
+
+            p.classList.add('show');
+            p.classList.remove('hide');
+          } else {
+            if (['text', 'textarea', 'email'].includes(input.type)) {
+              input.style.border = '1px solid rgba(var(--text-rgb), 0.4)';
+              p.classList.remove('show');
+              p.classList.add('hide');
+            } else {
+              p.classList.remove('show');
+              p.classList.add('hide');
+            }
+          }
+        });
+
+        const isValid = allInputElements.every((input) =>
+          input.checkValidity()
+        );
+
+        if (isValid) {
+          form.dispatchEvent(new Event('submit'));
+        }
+      }
+
+      submitButton.addEventListener('click', validate);
+      submitButton.addEventListener('keydown', (e) => {
+        e.preventDefault();
+
+        if (
+          e.keyCode === 13 ||
+          e.keyCode === 32 ||
+          e.key === 'Enter' ||
+          e.key === ' ' ||
+          e.key === 'Spacebar'
+        ) {
+          form.dispatchEvent(new Event('submit'));
+        }
+      });
+    </script>
+  </body>
+</html>
